@@ -2,6 +2,8 @@
 
 ## How to start?
 
+Binôme : RIGAL Nicolas - JAKUBIAK Adrien
+
 You will not be able to use this repository to save your work, you need to copy / import / fork it to 
 your favorite Git platform.
 
