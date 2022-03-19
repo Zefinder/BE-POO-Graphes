@@ -206,7 +206,7 @@ public class Path {
 		} else if (this.arcs.get(0).getOrigin().equals(this.origin)) {
 			valid = true;
 			for (int firstArc = 0; firstArc < this.arcs.size() - 1; firstArc++) {
-				if (!this.arcs.get(firstArc).getDestination().equals(this.arcs.get(firstArc+1).getOrigin())) {
+				if (!this.arcs.get(firstArc).getDestination().equals(this.arcs.get(firstArc + 1).getOrigin())) {
 					valid = false;
 					return valid;
 
@@ -253,11 +253,13 @@ public class Path {
 	 * 
 	 * @return Minimum travel time to travel this path (in seconds).
 	 * 
-	 * @deprecated Need to be implemented.
 	 */
 	public double getMinimumTravelTime() {
-		// TODO:
-		return 0;
+		double time = 0;
+		for (Arc arc : this.arcs) {
+			time += arc.getMinimumTravelTime();
+		}
+		return time;
 	}
 
 }
