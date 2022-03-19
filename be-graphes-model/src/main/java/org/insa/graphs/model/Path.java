@@ -199,17 +199,17 @@ public class Path {
 	public boolean isValid() {
 
 		boolean valid = false;
-		if (this.origin == null || this.arcs.isEmpty())
+		if (this.origin == null) {
 			valid = true;
-
-		else if (this.arcs.get(0).getOrigin().equals(this.origin)) {
+		} else if (this.arcs.isEmpty()) {
+			valid = true;
+		} else if (this.arcs.get(0).getOrigin().equals(this.origin)) {
+			valid = true;
 			for (int firstArc = 0; firstArc < this.arcs.size() - 1; firstArc++) {
-				for (int secondArc = 1; secondArc < this.arcs.size(); secondArc++) {
-					if (!this.arcs.get(firstArc).getDestination().equals(this.arcs.get(secondArc).getOrigin())) {
-						valid = false;
-						return valid;
+				if (!this.arcs.get(firstArc).getDestination().equals(this.arcs.get(firstArc+1).getOrigin())) {
+					valid = false;
+					return valid;
 
-					}
 				}
 			}
 		}
