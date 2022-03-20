@@ -54,7 +54,7 @@ public class Path {
 						goodSuccessorCount++;
 				}
 				if (goodSuccessorCount == 0)
-					throw new IllegalArgumentException();
+					throw new IllegalArgumentException("Le noeud d'après n'est pas dans la liste des successeurs !");
 
 				if (graph.getNodes().get(index).getNumberOfSuccessors() == 1) {
 					arcs.add(graph.getNodes().get(index).getSuccessors().get(0));
@@ -64,7 +64,9 @@ public class Path {
 
 					// boucle pour chopper le min
 					List<Arc> successors = graph.getNodes().get(index).getSuccessors();
-					for (int j = 0; j < graph.getNodes().get(index).getNumberOfSuccessors(); j++) {
+					int numberSuccessors = graph.getNodes().get(index).getNumberOfSuccessors();
+					
+					for (int j = 0; j < numberSuccessors; j++) {
 						// si l'arc va bien vers le prochain noeud de la liste :
 						if (successors.get(j).getDestination().equals(nodeSuiv)) {
 							double time = successors.get(j).getMinimumTravelTime();
@@ -117,7 +119,7 @@ public class Path {
 				// noeud actuel
 				int goodSuccessorCount = 0;
 				for (Arc arc : graph.getNodes().get(index).getSuccessors()) {
-					if (arc.getDestination().equals(nodeSuiv))
+					if (arc.getDestination().equals(	nodeSuiv))
 						goodSuccessorCount++;
 				}
 				if (goodSuccessorCount == 0)
@@ -131,7 +133,9 @@ public class Path {
 
 					// boucle pour chopper le min
 					List<Arc> successors = graph.getNodes().get(index).getSuccessors();
-					for (int j = 0; j < graph.getNodes().get(index).getNumberOfSuccessors(); j++) {
+					int numberSuccessors = graph.getNodes().get(index).getNumberOfSuccessors();
+					
+					for (int j = 0; j < numberSuccessors; j++) {
 						// si l'arc va bien vers le prochain noeud de la liste :
 						if (successors.get(j).getDestination().equals(nodeSuiv)) {
 							double time = successors.get(j).getLength();
