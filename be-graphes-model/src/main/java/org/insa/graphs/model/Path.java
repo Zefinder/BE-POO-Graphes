@@ -65,7 +65,7 @@ public class Path {
 					// boucle pour chopper le min
 					List<Arc> successors = graph.getNodes().get(index).getSuccessors();
 					int numberSuccessors = graph.getNodes().get(index).getNumberOfSuccessors();
-					
+
 					for (int j = 0; j < numberSuccessors; j++) {
 						// si l'arc va bien vers le prochain noeud de la liste :
 						if (successors.get(j).getDestination().equals(nodeSuiv)) {
@@ -119,7 +119,7 @@ public class Path {
 				// noeud actuel
 				int goodSuccessorCount = 0;
 				for (Arc arc : graph.getNodes().get(index).getSuccessors()) {
-					if (arc.getDestination().equals(	nodeSuiv))
+					if (arc.getDestination().equals(nodeSuiv))
 						goodSuccessorCount++;
 				}
 				if (goodSuccessorCount == 0)
@@ -134,7 +134,7 @@ public class Path {
 					// boucle pour chopper le min
 					List<Arc> successors = graph.getNodes().get(index).getSuccessors();
 					int numberSuccessors = graph.getNodes().get(index).getNumberOfSuccessors();
-					
+
 					for (int j = 0; j < numberSuccessors; j++) {
 						// si l'arc va bien vers le prochain noeud de la liste :
 						if (successors.get(j).getDestination().equals(nodeSuiv)) {
