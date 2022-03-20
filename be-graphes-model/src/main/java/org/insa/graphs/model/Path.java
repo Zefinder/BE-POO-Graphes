@@ -30,13 +30,61 @@ public class Path {
 	 * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
 	 *                                  consecutive nodes in the list are not
 	 *                                  connected in the graph.
-	 * 
-	 * @deprecated Need to be implemented.
 	 */
 	public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes) throws IllegalArgumentException {
 		List<Arc> arcs = new ArrayList<Arc>();
 		// TODO:
-		return new Path(graph, arcs);
+
+		Path resultPath;
+
+		if (nodes.size() == 1) {
+			resultPath = new Path(graph, nodes.get(0));
+		} else {
+			for (int i = 0; i < nodes.size() - 1; i++) {
+				Node node = nodes.get(i);
+				Node nodeSuiv = nodes.get(i + 1);
+
+				// index des deux noeuds dans le graphe
+				int index = graph.getNodes().indexOf(node);
+				// int indexSuiv = graph.getNodes().indexOf(nodeSuiv);
+
+				// on regarde si le prochain noeud de la liste est bien dans les successeurs du
+				// noeud actuel
+				int goodSuccessorCount = 0;
+				for (Arc arc : graph.getNodes().get(index).getSuccessors()) {
+					if (arc.getDestination().equals(nodeSuiv))
+						goodSuccessorCount++;
+				}
+				if (goodSuccessorCount == 0)
+					throw new IllegalArgumentException();
+
+				if (graph.getNodes().get(index).getNumberOfSuccessors() == 1) {
+					arcs.add(graph.getNodes().get(index).getSuccessors().get(0));
+				} else {
+					double minTime = -1;
+					int minTimeIndex = -1;
+
+					// boucle pour chopper le min
+					List<Arc> successors = graph.getNodes().get(index).getSuccessors();
+					for (int j = 0; j < graph.getNodes().get(index).getNumberOfSuccessors(); j++) {
+						// si l'arc va bien vers le prochain noeud de la liste :
+						if (successors.get(j).getDestination().equals(nodeSuiv)) {
+							double time = successors.get(j).getMinimumTravelTime();
+							if (time < minTime || minTime == -1) {
+								minTime = time;
+								minTimeIndex = j;
+							}
+
+						}
+					}
+
+					// on ajoute l'arc du temps min (getSuccessors renvoie des arcs)
+					arcs.add(graph.getNodes().get(index).getSuccessors().get(minTimeIndex));
+				}
+			}
+			resultPath = new Path(graph, arcs);
+		}
+		return resultPath;
 	}
 
 	/**
