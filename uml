@@ -1,0 +1,33 @@
+// Sweet Class Diagram
+// -------------------
+
+// Chain elements like this
+[ShortestPathAlgorithm]^[DijkstraAlgorithm​]^[AStarAlgorithm]
+[ShortestPathAlgorithm]^[BellmanFordAlgorithm]
+[ShortestPathData]<-[ShortestPathSolution]
+[ShortestPathObserver]^[ShortestPathTextObserver]
+[ShortestPathAlgorithm]<-[ShortestPathSolution]
+
+[≪Interface≫;ArcInspector]->[AbstractInputData]
+[≪Abstract≫;AbstractAlgorithm\<Observer\>]^[ShortestPathAlgorithm]
+[≪Abstract≫;AbstractInputData]^[ShortestPathData]
+[≪Abstract≫;AbstractSolution]^[ShortestPathSolution]
+[AlgorithmFactory]->[≪Abstract≫;AbstractAlgorithm\<Observer\>]
+[ArcInspectorFactory]->[≪Interface≫;ArcInspector]
+[≪Abstract≫;AbstractSolution]<-[≪Abstract≫;AbstractAlgorithm\<Observer\>]->[≪Abstract≫;AbstractInputData]
+[≪Abstract≫;AbstractInputData]->[≪Abstract≫;AbstractSolution]
+
+// Add more detail
+[≪Interface≫;ShortestPathObserver|]
+[DijkstraAlgorithm​|+ DijkstraAlgorithm​(ShortestPathData data)]
+[BellmanFordAlgorithm|+ BellmanFordAlgorithm(ShortestPathData data)]
+[AStarAlgorithm|+ AStarAlgorithm(ShortestPathData data)]
+[ShortestPathData|+ ShortestPathData(Graph graph, Node origin, Node destination, ArcInspector arcInspector);+ getOrigin(): Node;+ getDestination(): Node]
+[≪Abstract≫;ShortestPathAlgorithm]
+[ShortestPathSolution|+ ShortestPathSolution​(ShortestPathData data, Status status);+ ShortestPathSolution​(ShortestPathData data, Status status, Path path);+ getPath(): Path]
+
+[≪Interface≫;ArcInspector|+ getCost(Arc arc): double;+ isAllowed(Arc arc): boolean]
+[≪Abstract≫;AbstractInputData|+ getCost(Arc arc): double;+ getGraph(): Graph;+ isAllowed(Arc arc): boolean]
+[≪Abstract≫;AbstractSolution|+ isFeasible(): boolean]
+[ArcInspectorFactory|+ ArcInspectorFactory()]
+
