@@ -1,19 +1,23 @@
 package org.insa.graphs.algorithm.shortestpath;
 
+import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Node;
 
 public class Label {
 
 	private Node currentNode;
-	
+
 	private boolean mark;
-	
+
 	private double cost;
-	
-	private Node parent;
-	
-	public Label() {
-		// TODO Auto-generated constructor stub
+
+	private Arc father;
+
+	public Label(Node currentNode, boolean mark, double cost, Arc father) {
+		this.currentNode = currentNode;
+		this.mark = mark;
+		this.cost = cost;
+		this.father = father;
 	}
 
 	public Node getCurrentNode() {
@@ -24,12 +28,12 @@ public class Label {
 		this.currentNode = currentNode;
 	}
 
-	public boolean isMark() {
+	public boolean isMarked() {
 		return mark;
 	}
 
-	public void setMark(boolean mark) {
-		this.mark = mark;
+	public void mark() {
+		this.mark = true;
 	}
 
 	public double getCost() {
@@ -40,14 +44,12 @@ public class Label {
 		this.cost = cost;
 	}
 
-	public Node getParent() {
-		return parent;
+	public Arc getFather() {
+		return father;
 	}
 
-	public void setParent(Node parent) {
-		this.parent = parent;
+	public void setFather(Arc father) {
+		this.father = father;
 	}
-	
-	
 
 }
