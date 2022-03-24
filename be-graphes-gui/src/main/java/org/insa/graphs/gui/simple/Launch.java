@@ -49,7 +49,7 @@ public class Launch {
 		// Visit these directory to see the list of available files on Commetud.
 		final String mapName = "/home/jakubiak/Bureau/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
 		final String pathName = "/home/jakubiak/Bureau/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Paths/path_fr31insa_rangueil_r2.path";
-
+				
 		// Create a graph reader.
 		final GraphReader reader = new BinaryGraphReader(
 				new DataInputStream(new BufferedInputStream(new FileInputStream(mapName))));
@@ -59,7 +59,7 @@ public class Launch {
 
 		// Create the drawing:
 		final Drawing drawing = createDrawing();
-
+		
 		// Draw the graph on the drawing.
 		drawing.drawGraph(graph);
 

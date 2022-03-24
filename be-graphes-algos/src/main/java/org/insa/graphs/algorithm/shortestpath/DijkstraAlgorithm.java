@@ -7,6 +7,7 @@ import java.util.HashMap;
 import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.algorithm.utils.BinaryHeap;
 import org.insa.graphs.algorithm.utils.ElementNotFoundException;
+import org.insa.graphs.algorithm.utils.EmptyPriorityQueueException;
 import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Graph;
 import org.insa.graphs.model.Node;
@@ -31,59 +32,71 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 		// TODO:
 		Graph graph = data.getGraph();
 		final int nbNodes = graph.size();
-		Node origin = data.getOrigin();
+		Node origin = graph.get(data.getOrigin().getId());
 		int unmarkedNodes = nbNodes;
 
 		// Notify observers about the first event (origin processed).
 		notifyOriginProcessed(data.getOrigin());
 
 		for (int i = 0; i < nbNodes; i++) {
+			// On ajoute tous les nodes à notre HashMap avec un coût infini
 			labelMap.put(graph.get(i), new Label(graph.get(i), false, Double.POSITIVE_INFINITY, null));
 		}
 
+		// On met l'origine à un coût de 0 et on l'ajoute à notre file
 		labelMap.get(origin).setCost(0);
 		priorityQueue.insert(origin);
 
 		Node currentNode = origin;
 		while (unmarkedNodes > 0) {
-			currentNode = priorityQueue.findMin();
-			labelMap.get(currentNode).mark();
-			unmarkedNodes--;
-			for (Arc successor : currentNode.getSuccessors()) {
-				// Labels des deux noeuds concernés pour y accéder facilement
-				Label currentNodeLabel = labelMap.get(currentNode);
-				Label nextNodeLabel = labelMap.get(successor.getDestination());
+			try {
+				// On récupère le premier noeud de la file et on le marque
+				currentNode = priorityQueue.deleteMin();
+				labelMap.get(currentNode).mark();
+				unmarkedNodes--;
 
-				if (!nextNodeLabel.isMarked()) {
-					// Le coût du noeud suivant est le minimum entre son coût actuel et le coût du
-					// noeud actuel + le coût de l'arc
-					if (currentNodeLabel.getCost() + successor.getMinimumTravelTime() < nextNodeLabel.getCost()) {
-						nextNodeLabel.setCost(currentNodeLabel.getCost() + successor.getMinimumTravelTime());
+				// Pour tous les arcs qui le relient...
+				for (Arc successor : currentNode.getSuccessors()) {
+					// Labels des deux noeuds concernés pour y accéder facilement
+					Label currentNodeLabel = labelMap.get(currentNode);
+					Label nextNodeLabel = labelMap.get(successor.getDestination());
 
-						// Si le coût minimum a été modifié, le noeud actuel fait partie du chemin le
-						// plus court donc il faut le mettre en père du noeud suivant
-						try {
-							priorityQueue.remove(nextNodeLabel.getCurrentNode());
-							priorityQueue.insert(nextNodeLabel.getCurrentNode());
+					// ... s'il est déjà marqué on l'ignore
+					if (!nextNodeLabel.isMarked()) {
+						// Le coût du noeud suivant est le minimum entre son coût actuel et le coût du
+						// noeud actuel + le coût de l'arc
+						if (currentNodeLabel.getCost() + successor.getMinimumTravelTime() < nextNodeLabel.getCost()) {
+							nextNodeLabel.setCost(currentNodeLabel.getCost() + successor.getMinimumTravelTime());
 
-						} catch (ElementNotFoundException e) {
-							priorityQueue.insert(nextNodeLabel.getCurrentNode());
+							// Si le coût minimum a été modifié, le noeud actuel fait partie du chemin le
+							// plus court donc il faut le mettre en père du noeud suivant
+							try {
+								priorityQueue.remove(nextNodeLabel.getCurrentNode());
+								priorityQueue.insert(nextNodeLabel.getCurrentNode());
+
+							} catch (ElementNotFoundException e) {
+								priorityQueue.insert(nextNodeLabel.getCurrentNode());
+							}
+
+							nextNodeLabel.setFather(successor);
+
 						}
-
-						nextNodeLabel.setFather(successor);
-
 					}
 				}
+			} catch (EmptyPriorityQueueException e) {
+				System.out.println("Empty BinaryHeap, engaging next step !");
+				break;
 			}
 		}
 
 		// Construction du ShortestPath
+		// On part du noeud qu'on veut (destination) et on remonte jusqu'à l'origine
 		ArrayList<Arc> arcs = new ArrayList<>();
-		// On parcourt les noeuds dans le bon ordre et ajoute leurs arcs pères
-		for (int i = 0; i < priorityQueue.size(); i++) {
-			Arc arc = labelMap.get(priorityQueue.deleteMin()).getFather();
-			if (arc != null)
-				arcs.add(labelMap.get(priorityQueue.deleteMin()).getFather());
+
+		Arc father = labelMap.get(data.getDestination()).getFather();
+		while (father != null) {
+			arcs.add(father);
+			father = labelMap.get(father.getOrigin()).getFather();
 		}
 
 		Collections.reverse(arcs);
