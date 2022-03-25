@@ -3,17 +3,17 @@ package org.insa.graphs.algorithm.shortestpath;
 import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Node;
 
-public class Label {
+public class Label implements Comparable<Label> {
 
 	private Node currentNode;
 
 	private boolean mark;
 
-	private double cost;
+	private float cost;
 
 	private Arc father;
 
-	public Label(Node currentNode, boolean mark, double cost, Arc father) {
+	public Label(Node currentNode, boolean mark, float cost, Arc father) {
 		this.currentNode = currentNode;
 		this.mark = mark;
 		this.cost = cost;
@@ -36,11 +36,11 @@ public class Label {
 		this.mark = true;
 	}
 
-	public double getCost() {
+	public float getCost() {
 		return cost;
 	}
 
-	public void setCost(double cost) {
+	public void setCost(float cost) {
 		this.cost = cost;
 	}
 
@@ -50,6 +50,11 @@ public class Label {
 
 	public void setFather(Arc father) {
 		this.father = father;
+	}
+
+	@Override
+	public int compareTo(Label o) {
+		return Float.compare(getCost(), o.getCost());
 	}
 
 }
