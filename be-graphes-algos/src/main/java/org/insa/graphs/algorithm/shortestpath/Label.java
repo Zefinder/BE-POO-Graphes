@@ -9,7 +9,7 @@ public class Label implements Comparable<Label> {
 
 	private boolean mark;
 
-	private float cost;
+	private double cost;
 
 	private Arc father;
 
@@ -36,11 +36,11 @@ public class Label implements Comparable<Label> {
 		this.mark = true;
 	}
 
-	public float getCost() {
+	public double getCost() {
 		return cost;
 	}
 
-	public void setCost(float cost) {
+	public void setCost(double cost) {
 		this.cost = cost;
 	}
 
@@ -54,7 +54,7 @@ public class Label implements Comparable<Label> {
 
 	@Override
 	public int compareTo(Label o) {
-		return Float.compare(getCost(), o.getCost());
+		return Double.compare(getCost(), o.getCost());
 	}
 
 }

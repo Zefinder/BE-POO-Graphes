@@ -70,9 +70,17 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
 						// ... s'il est déjà marqué on l'ignore
 						if (!nextNodeLabel.isMarked()) {
+							
+							double oldDistance = nextNodeLabel.getCost();
+							double newDistance = currentNodeLabel.getCost() + successor.getLength();
+							
+		                    if (Double.isInfinite(oldDistance) && Double.isFinite(newDistance)) {
+		                        notifyNodeReached(successor.getDestination());
+		                    }
+							
 							// Le coût du noeud suivant est le minimum entre son coût actuel et le coût du
 							// noeud actuel + le coût de l'arc
-							if (currentNodeLabel.getCost() + successor.getLength() < nextNodeLabel.getCost()) {
+							if (newDistance < oldDistance) {
 
 								// Si le coût minimum a été modifié, le noeud actuel fait partie du chemin le
 								// plus court donc il faut le mettre en père du noeud suivant
@@ -82,7 +90,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 								} catch (ElementNotFoundException e) {
 
 								}
-								nextNodeLabel.setCost(currentNodeLabel.getCost() + successor.getLength());
+								nextNodeLabel.setCost(newDistance);
 								nextNodeLabel.setFather(successor);
 								priorityQueue.insert(nextNodeLabel);
 
@@ -97,6 +105,9 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 			}
 		}
 
+        // The destination has been found, notify the observers.
+        notifyDestinationReached(data.getDestination());
+        
 		// Construction du ShortestPath
 		// On part du noeud qu'on veut (destination) et on remonte jusqu'à l'origine
 		ArrayList<Arc> arcs = new ArrayList<>();
