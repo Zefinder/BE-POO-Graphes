@@ -13,7 +13,7 @@ public class Label implements Comparable<Label> {
 
 	private Arc father;
 
-	public Label(Node currentNode, boolean mark, float cost, Arc father) {
+	public Label(Node currentNode, boolean mark, double cost, Arc father) {
 		this.currentNode = currentNode;
 		this.mark = mark;
 		this.cost = cost;
@@ -51,10 +51,14 @@ public class Label implements Comparable<Label> {
 	public void setFather(Arc father) {
 		this.father = father;
 	}
+	
+	public double getTotalCost() {
+		return getCost();
+	}
 
 	@Override
 	public int compareTo(Label o) {
-		return Double.compare(getCost(), o.getCost());
+		return Double.compare(getTotalCost(), o.getTotalCost());
 	}
 
 }
