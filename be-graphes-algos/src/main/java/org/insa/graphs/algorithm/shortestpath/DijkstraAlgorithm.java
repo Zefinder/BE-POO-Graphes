@@ -14,13 +14,14 @@ import org.insa.graphs.model.Path;
 
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
-	private ArrayList<Label> labelMap;
+	// On crée une liste qui contiendra soit Label soit LabelStar !
+	// Attention, ? signifie qu'on ne peut rien ajouter ! (d'où la fonction)
+	private ArrayList<? extends Label> labelMap;
 
 	private BinaryHeap<Label> priorityQueue;
 
 	public DijkstraAlgorithm(ShortestPathData data) {
 		super(data);
-		labelMap = new ArrayList<Label>();
 		priorityQueue = new BinaryHeap<Label>();
 	}
 
@@ -40,10 +41,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 		// Notify observers about the first event (origin processed).
 		notifyOriginProcessed(data.getOrigin());
 
-		for (int i = 0; i < nbNodes; i++) {
-			// On ajoute tous les nodes à notre HashMap avec un coût infini
-			labelMap.add(new Label(graph.get(i), false, Double.POSITIVE_INFINITY, null));
-		}
+		this.labelMap = registerNodes(data);
 
 		// On met l'origine à un coût de 0 et on l'ajoute à notre file
 		labelMap.get(origin.getId()).setCost(0);
@@ -135,6 +133,17 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 		}
 
 		return solution;
+	}
+
+	public ArrayList<? extends Label> registerNodes(ShortestPathData data) {
+		int nbNodes = data.getGraph().size();
+		ArrayList<Label> labelMap = new ArrayList<Label>();
+		for (int i = 0; i < nbNodes; i++) {
+			// On ajoute tous les nodes à notre HashMap avec un coût infini
+			labelMap.add(new Label(data.getGraph().get(i), false, Double.POSITIVE_INFINITY, null));
+		}
+
+		return labelMap;
 	}
 
 }
