@@ -50,7 +50,7 @@ public abstract class ShortestPathTest {
 
 	private Path getPath(Graph graph, String pathName) throws IOException {
 		Path path;
-		PathReader pathReader = new BinaryPathReader(
+		final PathReader pathReader = new BinaryPathReader(
 				new DataInputStream(new BufferedInputStream(new FileInputStream(pathName))));
 		path = pathReader.readPath(graph);
 		return path;
