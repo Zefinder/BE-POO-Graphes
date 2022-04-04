@@ -48,62 +48,56 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 		priorityQueue.insert(labelMap.get(origin.getId()));
 
 		Label currentNodeLabel = labelMap.get(origin.getId());
-		while (unmarkedNodes > 0 && !found) {
-			try {
-				// On récupère le premier noeud de la file et on le marque
-				currentNodeLabel = priorityQueue.deleteMin();
-				currentNodeLabel.mark();
-				notifyNodeMarked(currentNodeLabel.getCurrentNode());
-				unmarkedNodes--;
+		while (unmarkedNodes > 0 && !found && !priorityQueue.isEmpty()) {
+			// On récupère le premier noeud de la file et on le marque
+			currentNodeLabel = priorityQueue.deleteMin();
+			currentNodeLabel.mark();
+			notifyNodeMarked(currentNodeLabel.getCurrentNode());
+			unmarkedNodes--;
 
-				// Si on est sur la destination, on peut partir
-				if (currentNodeLabel.getCurrentNode().equals(destination)) {
-					found = true;
-				} else {
-					Label nextNodeLabel = null;
-					// Pour tous les arcs qui le relient...
-					for (Arc successor : currentNodeLabel.getCurrentNode().getSuccessors()) {
+			// Si on est sur la destination, on peut partir
+			if (currentNodeLabel.getCurrentNode().equals(destination)) {
+				found = true;
+			} else {
+				Label nextNodeLabel = null;
+				// Pour tous les arcs qui le relient...
+				for (Arc successor : currentNodeLabel.getCurrentNode().getSuccessors()) {
 
-						if (data.isAllowed(successor)) {
+					if (data.isAllowed(successor)) {
 
-							// Labels des deux noeuds concernés pour y accéder facilement
-							nextNodeLabel = labelMap.get(successor.getDestination().getId());
+						// Labels des deux noeuds concernés pour y accéder facilement
+						nextNodeLabel = labelMap.get(successor.getDestination().getId());
 
-							// ... s'il est déjà marqué on l'ignore
-							if (!nextNodeLabel.isMarked()) {
+						// ... s'il est déjà marqué on l'ignore
+						if (!nextNodeLabel.isMarked()) {
 
-								double old = nextNodeLabel.getCost();
-								double neww = currentNodeLabel.getCost() + data.getCost(successor);
+							double old = nextNodeLabel.getCost();
+							double neww = currentNodeLabel.getCost() + data.getCost(successor);
 
-								if (Double.isInfinite(old) && Double.isFinite(neww)) {
-									notifyNodeReached(successor.getDestination());
-								}
+							if (Double.isInfinite(old) && Double.isFinite(neww)) {
+								notifyNodeReached(successor.getDestination());
+							}
 
-								// Le coût du noeud suivant est le minimum entre son coût actuel et le coût du
-								// noeud actuel + le coût de l'arc
-								if (neww < old) {
+							// Le coût du noeud suivant est le minimum entre son coût actuel et le coût du
+							// noeud actuel + le coût de l'arc
+							if (neww < old) {
 
-									// Si le coût minimum a été modifié, le noeud actuel fait partie du chemin le
-									// plus court donc il faut le mettre en père du noeud suivant
-									try {
-										priorityQueue.remove(nextNodeLabel);
+								// Si le coût minimum a été modifié, le noeud actuel fait partie du chemin le
+								// plus court donc il faut le mettre en père du noeud suivant
+								try {
+									priorityQueue.remove(nextNodeLabel);
 
-									} catch (ElementNotFoundException e) {
-
-									}
-									nextNodeLabel.setCost(neww);
-									nextNodeLabel.setFather(successor);
-									priorityQueue.insert(nextNodeLabel);
+								} catch (ElementNotFoundException e) {
 
 								}
+								nextNodeLabel.setCost(neww);
+								nextNodeLabel.setFather(successor);
+								priorityQueue.insert(nextNodeLabel);
+
 							}
 						}
 					}
 				}
-
-			} catch (EmptyPriorityQueueException e) {
-				System.out.println("Empty BinaryHeap, engaging next step !");
-				break;
 			}
 		}
 

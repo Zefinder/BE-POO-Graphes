@@ -2,6 +2,7 @@ package org.insa.graphs.algorithm.shortestpath;
 
 import java.util.ArrayList;
 
+import org.insa.graphs.algorithm.AbstractInputData.Mode;
 import org.insa.graphs.model.Graph;
 import org.insa.graphs.model.Point;
 
@@ -16,9 +17,12 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
 		Graph graph = data.getGraph();
 		int nbNodes = graph.size();
 		ArrayList<LabelStar> labelMap = new ArrayList<LabelStar>();
+		double time = (data.getMode() == Mode.TIME ? graph.getGraphInformation().getMaximumSpeed() / 3.6 : 1);
+
+
 		for (int i = 0; i < nbNodes; i++) {
 			labelMap.add(new LabelStar(graph.get(i), false, Double.POSITIVE_INFINITY, null,
-					Point.distance(graph.get(i).getPoint(), data.getDestination().getPoint())));
+					Point.distance(graph.get(i).getPoint(), data.getDestination().getPoint()) / time));
 		}
 
 		return labelMap;

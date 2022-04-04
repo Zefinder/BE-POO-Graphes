@@ -118,18 +118,21 @@ public abstract class ShortestPathTest {
 	@Test
 	public void testInsaBikiniPath() {
 		Assume.assumeNotNull(insaBikiniSolution);
+		assertTrue(insaBikiniSolution.getStatus() == Status.OPTIMAL);
 		assertEquals(insaBikiniPath.getArcs(), insaBikiniSolution.getPath().getArcs());
 	}
 
 	@Test
 	public void testInsaAirportLength() {
 		Assume.assumeNotNull(insaAeroportLengthSolution);
+		assertTrue(insaAeroportLengthSolution.getStatus() == Status.OPTIMAL);
 		assertEquals(insaAeroportLengthPath.getArcs(), insaAeroportLengthSolution.getPath().getArcs());
 	}
 
 	@Test
 	public void testInsaAirportTime() {
 		Assume.assumeNotNull(insaAeroportTimeSolution);
+		assertTrue(insaAeroportTimeSolution.getStatus() == Status.OPTIMAL);
 		assertEquals(insaAeroportTimePath.getArcs(), insaAeroportTimeSolution.getPath().getArcs());
 	}
 
