@@ -12,6 +12,8 @@ public class Label implements Comparable<Label> {
 	private double cost;
 
 	private Arc father;
+	
+	private int indexTas = -1;
 
 	public Label(Node currentNode, boolean mark, double cost, Arc father) {
 		this.currentNode = currentNode;
@@ -59,6 +61,14 @@ public class Label implements Comparable<Label> {
 	@Override
 	public int compareTo(Label o) {
 		return Double.compare(getTotalCost(), o.getTotalCost());
+	}
+
+	public int getIndexTas() {
+		return indexTas;
+	}
+
+	public void setIndexTas(int indexTas) {
+		this.indexTas = indexTas;
 	}
 
 }

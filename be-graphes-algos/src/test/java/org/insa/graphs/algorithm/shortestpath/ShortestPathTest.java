@@ -60,7 +60,7 @@ public abstract class ShortestPathTest {
 	public void init() throws IOException {
 		this.algorithm = setAlgorithm();
 
-		String mapName = "C:\\Users\\adric\\Downloads\\haute-garonne.mapgr";
+		String mapName = "/home/jakubiak/Bureau/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/haute-garonne.mapgr";
 		final GraphReader reader = new BinaryGraphReader(
 				new DataInputStream(new BufferedInputStream(new FileInputStream(mapName))));
 
@@ -75,7 +75,7 @@ public abstract class ShortestPathTest {
 		nullSolution = getSolution(graph, origin, destination, arcFilter);
 
 		// Chemin INSA-Bikini
-		String pathName = "C:\\Users\\adric\\Downloads\\path_fr31_insa_bikini_canal.path";
+		String pathName = "/home/jakubiak/Bureau/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Paths/path_fr31_insa_bikini_canal.path";
 		insaBikiniPath = getPath(graph, pathName);
 
 		origin = graph.get(10991);
@@ -86,7 +86,7 @@ public abstract class ShortestPathTest {
 		insaBikiniSolution = getSolution(graph, origin, destination, arcFilter);
 
 		// Chemin INSA-Aéroport (longueur)
-		pathName = "C:\\Users\\adric\\Downloads\\path_fr31_insa_aeroport_length.path";
+		pathName = "/home/jakubiak/Bureau/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Paths/path_fr31_insa_aeroport_length.path";
 		insaAeroportLengthPath = getPath(graph, pathName);
 
 		origin = graph.get(10991);
@@ -97,7 +97,7 @@ public abstract class ShortestPathTest {
 		insaAeroportLengthSolution = getSolution(graph, origin, destination, arcFilter);
 
 		// Chemin INSA-Aéroport (temps)
-		pathName = "C:\\Users\\adric\\Downloads\\path_fr31_insa_aeroport_time.path";
+		pathName = "/home/jakubiak/Bureau/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Paths/path_fr31_insa_aeroport_time.path";
 		insaAeroportTimePath = getPath(graph, pathName);
 
 		origin = graph.get(10991);
@@ -112,6 +112,7 @@ public abstract class ShortestPathTest {
 	// En anglais, un graphe connexe est un graphe connecté
 	@Test
 	public void testDisconnectedPath() {
+		Assume.assumeNotNull(nullSolution);
 		assertTrue(nullSolution.getStatus() == Status.INFEASIBLE);
 	}
 
