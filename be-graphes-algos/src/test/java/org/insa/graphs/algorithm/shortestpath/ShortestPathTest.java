@@ -29,13 +29,16 @@ public abstract class ShortestPathTest {
 	private Path insaBikiniPath, insaAeroportLengthPath, insaAeroportTimePath;
 	private ShortestPathAlgorithm algorithm;
 	private ShortestPathSolution nullSolution, insaBikiniSolution, insaAeroportLengthSolution, insaAeroportTimeSolution;
+	private ShortestPathSolution solutionsDij, solutionsAst;
 	private Node origin, destination;
 	private ArcInspector arcFilter;
 	private ShortestPathData data;
+	private ShortestPathAlgorithm autreAlgo;
 
 	public abstract ShortestPathAlgorithm setAlgorithm();
 
-	private ShortestPathSolution getSolution(Graph graph, Node origin, Node destination, ArcInspector arcFilter) {
+	private ShortestPathSolution getSolution(ShortestPathAlgorithm algorithm, Graph graph, Node origin,
+			Node destination, ArcInspector arcFilter) {
 		ShortestPathSolution solution;
 		data = new ShortestPathData(graph, origin, destination, arcFilter);
 		try {
@@ -44,7 +47,7 @@ public abstract class ShortestPathTest {
 			e.printStackTrace();
 		}
 
-		solution = algorithm.doRun();
+		solution = this.algorithm.doRun();
 		return solution;
 	}
 
@@ -60,6 +63,12 @@ public abstract class ShortestPathTest {
 	public void init() throws IOException {
 		this.algorithm = setAlgorithm();
 
+		if (algorithm instanceof DijkstraAlgorithm) {
+			this.autreAlgo = new AStarAlgorithm(null);
+		} else if (algorithm instanceof AStarAlgorithm) {
+			this.autreAlgo = new DijkstraAlgorithm(null);
+		}
+
 		String mapName = "/home/jakubiak/Bureau/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/haute-garonne.mapgr";
 		final GraphReader reader = new BinaryGraphReader(
 				new DataInputStream(new BufferedInputStream(new FileInputStream(mapName))));
@@ -72,7 +81,7 @@ public abstract class ShortestPathTest {
 		// Toutes routes autorisées
 		arcFilter = ArcInspectorFactory.getAllFilters().get(0);
 
-		nullSolution = getSolution(graph, origin, destination, arcFilter);
+		nullSolution = getSolution(algorithm, graph, origin, destination, arcFilter);
 
 		// Chemin INSA-Bikini
 		String pathName = "/home/jakubiak/Bureau/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Paths/path_fr31_insa_bikini_canal.path";
@@ -83,7 +92,7 @@ public abstract class ShortestPathTest {
 		// Toutes routes autorisées
 		arcFilter = ArcInspectorFactory.getAllFilters().get(0);
 
-		insaBikiniSolution = getSolution(graph, origin, destination, arcFilter);
+		insaBikiniSolution = getSolution(algorithm, graph, origin, destination, arcFilter);
 
 		// Chemin INSA-Aéroport (longueur)
 		pathName = "/home/jakubiak/Bureau/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Paths/path_fr31_insa_aeroport_length.path";
@@ -94,7 +103,7 @@ public abstract class ShortestPathTest {
 		// Routes que pour les voitures, length
 		arcFilter = ArcInspectorFactory.getAllFilters().get(1);
 
-		insaAeroportLengthSolution = getSolution(graph, origin, destination, arcFilter);
+		insaAeroportLengthSolution = getSolution(algorithm, graph, origin, destination, arcFilter);
 
 		// Chemin INSA-Aéroport (temps)
 		pathName = "/home/jakubiak/Bureau/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Paths/path_fr31_insa_aeroport_time.path";
@@ -105,36 +114,61 @@ public abstract class ShortestPathTest {
 		// Routes que pour les voitures, time
 		arcFilter = ArcInspectorFactory.getAllFilters().get(2);
 
-		insaAeroportTimeSolution = getSolution(graph, origin, destination, arcFilter);
+		insaAeroportTimeSolution = getSolution(algorithm, graph, origin, destination, arcFilter);
 
 	}
 
 	// En anglais, un graphe connexe est un graphe connecté
 	@Test
 	public void testDisconnectedPath() {
-		Assume.assumeNotNull(nullSolution);
+		Assume.assumeNotNull(algorithm, nullSolution);
 		assertTrue(nullSolution.getStatus() == Status.INFEASIBLE);
 	}
 
 	@Test
 	public void testInsaBikiniPath() {
-		Assume.assumeNotNull(insaBikiniSolution);
+		Assume.assumeNotNull(algorithm, insaBikiniSolution);
 		assertTrue(insaBikiniSolution.getStatus() == Status.OPTIMAL);
 		assertEquals(insaBikiniPath.getArcs(), insaBikiniSolution.getPath().getArcs());
 	}
 
 	@Test
 	public void testInsaAirportLength() {
-		Assume.assumeNotNull(insaAeroportLengthSolution);
+		Assume.assumeNotNull(algorithm, insaAeroportLengthSolution);
 		assertTrue(insaAeroportLengthSolution.getStatus() == Status.OPTIMAL);
 		assertEquals(insaAeroportLengthPath.getArcs(), insaAeroportLengthSolution.getPath().getArcs());
 	}
 
 	@Test
 	public void testInsaAirportTime() {
-		Assume.assumeNotNull(insaAeroportTimeSolution);
+		Assume.assumeNotNull(algorithm, insaAeroportTimeSolution);
 		assertTrue(insaAeroportTimeSolution.getStatus() == Status.OPTIMAL);
 		assertEquals(insaAeroportTimePath.getArcs(), insaAeroportTimeSolution.getPath().getArcs());
+	}
+
+	@Test
+	public void testRandomNodes() {
+		// Prenons des Noeuds au hasard
+		for (int i = 0; i < 20; i++) {
+			generateRandomSolution();
+
+			assertTrue(solutionsDij.getStatus() == Status.OPTIMAL);
+			assertTrue(solutionsAst.getStatus() == Status.OPTIMAL);
+
+			assertEquals(solutionsDij.getPath().getArcs(), solutionsAst.getPath().getArcs());
+		}
+	}
+
+	private void generateRandomSolution() {
+		do {
+			origin = graph.get((int) Math.floor(Math.random() * graph.size()));
+			destination = graph.get((int) Math.floor(Math.random() * graph.size()));
+
+			arcFilter = ArcInspectorFactory.getAllFilters().get((int) Math.floor(Math.random() * 5));
+
+			solutionsDij = getSolution(algorithm, graph, origin, destination, arcFilter);
+			solutionsAst = getSolution(autreAlgo, graph, origin, destination, arcFilter);
+		} while (solutionsDij.getStatus() == Status.INFEASIBLE || solutionsAst.getStatus() == Status.INFEASIBLE);
 	}
 
 }

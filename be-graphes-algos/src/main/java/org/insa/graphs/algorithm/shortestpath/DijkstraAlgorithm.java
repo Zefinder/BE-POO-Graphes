@@ -3,6 +3,8 @@ package org.insa.graphs.algorithm.shortestpath;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javax.swing.JOptionPane;
+
 import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.algorithm.utils.BinaryHeap;
 import org.insa.graphs.algorithm.utils.ElementNotFoundException;
@@ -11,6 +13,7 @@ import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Graph;
 import org.insa.graphs.model.Node;
 import org.insa.graphs.model.Path;
+import org.insa.graphs.model.Point;
 
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
@@ -70,13 +73,13 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
 						// ... s'il est déjà marqué on l'ignore
 						if (!nextNodeLabel.isMarked()) {
-
 							double old = nextNodeLabel.getCost();
 							double neww = currentNodeLabel.getCost() + data.getCost(successor);
 
 							if (Double.isInfinite(old) && Double.isFinite(neww)) {
 								notifyNodeReached(successor.getDestination());
 							}
+							
 
 							// Le coût du noeud suivant est le minimum entre son coût actuel et le coût du
 							// noeud actuel + le coût de l'arc
