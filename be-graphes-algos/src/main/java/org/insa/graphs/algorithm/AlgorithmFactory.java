@@ -10,6 +10,7 @@ import java.util.TreeSet;
 import org.insa.graphs.algorithm.shortestpath.AStarAlgorithm;
 import org.insa.graphs.algorithm.shortestpath.BellmanFordAlgorithm;
 import org.insa.graphs.algorithm.shortestpath.DijkstraAlgorithm;
+import org.insa.graphs.algorithm.shortestpath.ElectricCarAlgorithm;
 import org.insa.graphs.algorithm.shortestpath.ShortestPathAlgorithm;
 import org.insa.graphs.algorithm.weakconnectivity.WeaklyConnectedComponentsAlgorithm;
 
@@ -36,6 +37,8 @@ public class AlgorithmFactory {
         // Register your algorithms here:
         // registerAlgorithm(CarPoolingAlgorithm.class, "My Awesome Algorithm",
         // MyCarPoolingAlgorithm.class);
+        // Si je le met dans ShortestPathAlgorithm, il apparaît dans la liste des algos
+        registerAlgorithm(ElectricCarAlgorithm.class, "Electric Car", ElectricCarAlgorithm.class);
     }
 
     /**
