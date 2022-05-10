@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.insa.graphs.algorithm.AbstractInputData.Mode;
 import org.insa.graphs.model.Graph;
-import org.insa.graphs.model.Point;
 
 public class AStarAlgorithm extends DijkstraAlgorithm {
 

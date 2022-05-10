@@ -3,6 +3,7 @@ package org.insa.graphs.algorithm.utils;
 import java.util.ArrayList;
 
 import org.insa.graphs.algorithm.shortestpath.Label;
+import org.insa.graphs.algorithm.shortestpath.LabelElectric;
 
 /**
  * Implements a binary heap containing elements of type E.
@@ -53,6 +54,9 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
 		}
 		if (value instanceof Label) {
 			Label label = (Label) value;
+			label.setIndexTas(index);
+		} else if (value instanceof LabelElectric) {
+			LabelElectric label = (LabelElectric) value;
 			label.setIndexTas(index);
 		}
 	}
@@ -145,6 +149,10 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
 			int index;
 			if (x instanceof Label) {
 				Label lab = (Label) x;
+				index = lab.getIndexTas();
+				lab.setIndexTas(-1);
+			} else if (x instanceof LabelElectric) {
+				LabelElectric lab = (LabelElectric) x;
 				index = lab.getIndexTas();
 				lab.setIndexTas(-1);
 			} else {

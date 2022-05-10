@@ -16,7 +16,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 	// On crée une liste qui contiendra soit Label soit LabelStar !
 	// Attention, ? signifie qu'on ne peut rien ajouter ! (d'où la fonction)
 	private ArrayList<? extends Label> labelMap;
-
 	private BinaryHeap<Label> priorityQueue;
 
 	public DijkstraAlgorithm(ShortestPathData data) {
@@ -92,7 +91,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 								nextNodeLabel.setCost(neww);
 								nextNodeLabel.setFather(successor);
 								priorityQueue.insert(nextNodeLabel);
-
 							}
 						}
 					}
@@ -138,5 +136,4 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
 		return labelMap;
 	}
-
 }
