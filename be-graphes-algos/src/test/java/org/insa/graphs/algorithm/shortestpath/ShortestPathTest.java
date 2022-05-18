@@ -27,9 +27,9 @@ public abstract class ShortestPathTest {
 
 	private Graph graph;
 	private Path insaBikiniPath, insaAeroportLengthPath, insaAeroportTimePath;
-	private ShortestPathAlgorithm algorithm;
+	private ShortestPathAlgorithm algorithm, algorithmBellman;
 	private ShortestPathSolution nullSolution, sameNodeSolution, insaBikiniSolution, insaAeroportLengthSolution, insaAeroportTimeSolution;
-	private ShortestPathSolution solutionsDij, solutionsAst;
+	private ShortestPathSolution solutionsDij, solutionsAst, solutionsBell, solution;
 	private Node origin, destination;
 	private ArcInspector arcFilter;
 	private ShortestPathData data;
@@ -62,12 +62,6 @@ public abstract class ShortestPathTest {
 	@Before
 	public void init() throws IOException {
 		this.algorithm = setAlgorithm();
-
-		if (algorithm instanceof DijkstraAlgorithm) {
-			this.autreAlgo = new AStarAlgorithm(null);
-		} else if (algorithm instanceof AStarAlgorithm) {
-			this.autreAlgo = new DijkstraAlgorithm(null);
-		}
 
 		String mapName = "C:\\Users\\adric\\Downloads\\haute-garonne.mapgr";
 		final GraphReader reader = new BinaryGraphReader(
@@ -160,10 +154,16 @@ public abstract class ShortestPathTest {
 	}
 
 	@Test
-	public void testRandomNodes() {
+	public void testRandomNodesDijAstar() {
+		if (algorithm instanceof DijkstraAlgorithm) {
+			this.autreAlgo = new AStarAlgorithm(null);
+		} else if (algorithm instanceof AStarAlgorithm) {
+			this.autreAlgo = new DijkstraAlgorithm(null);
+		}
+		
 		// Prenons des Noeuds au hasard
-		for (int i = 0; i < 20; i++) {
-			generateRandomSolution();
+		for (int i = 0; i < 25; i++) {
+			generateRandomSolutionDijAstar();
 
 			assertTrue(solutionsDij.getStatus() == Status.OPTIMAL);
 			assertTrue(solutionsAst.getStatus() == Status.OPTIMAL);
@@ -172,7 +172,7 @@ public abstract class ShortestPathTest {
 		}
 	}
 
-	private void generateRandomSolution() {
+	private void generateRandomSolutionDijAstar() {
 		do {
 			origin = graph.get((int) Math.floor(Math.random() * graph.size()));
 			destination = graph.get((int) Math.floor(Math.random() * graph.size()));
@@ -184,4 +184,30 @@ public abstract class ShortestPathTest {
 		} while (solutionsDij.getStatus() == Status.INFEASIBLE || solutionsAst.getStatus() == Status.INFEASIBLE);
 	}
 
+	@Test
+	public void testRandomNodesBellman() {
+		this.algorithmBellman = new BellmanFordAlgorithm(null);
+		
+		// Prenons des Noeuds au hasard
+		for (int i = 0; i < 5; i++) {
+			generateRandomSolutionBellman();
+
+			assertTrue(solutionsBell.getStatus() == Status.OPTIMAL);
+			assertTrue(solution.getStatus() == Status.OPTIMAL);
+
+			assertEquals(solution.getPath().getArcs(), solutionsBell.getPath().getArcs());
+		}
+	}
+	
+	private void generateRandomSolutionBellman() {
+		do {
+			origin = graph.get((int) Math.floor(Math.random() * graph.size()));
+			destination = graph.get((int) Math.floor(Math.random() * graph.size()));
+
+			arcFilter = ArcInspectorFactory.getAllFilters().get((int) Math.floor(Math.random() * 5));
+
+			solution = getSolution(algorithm, graph, origin, destination, arcFilter);
+			solutionsBell = getSolution(algorithmBellman, graph, origin, destination, arcFilter);
+		} while (solution.getStatus() == Status.INFEASIBLE || solutionsBell.getStatus() == Status.INFEASIBLE);
+	}
 }
