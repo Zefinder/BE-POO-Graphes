@@ -74,7 +74,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 							if (Double.isInfinite(old) && Double.isFinite(neww)) {
 								notifyNodeReached(successor.getDestination());
 							}
-							
 
 							// Le coût du noeud suivant est le minimum entre son coût actuel et le coût du
 							// noeud actuel + le coût de l'arc
@@ -113,17 +112,17 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 			father = labelMap.get(current.getId()).getFather();
 		}
 
-		if (!current.equals(origin)) {
+		if (!current.equals(origin) || arcs.size() == 0) {
 			solution = new ShortestPathSolution(data, Status.INFEASIBLE);
-		} else {
 
+		} else {
 			Collections.reverse(arcs);
 			Path path = new Path(graph, arcs);
 			solution = new ShortestPathSolution(data, Status.OPTIMAL, path);
-
 		}
 
 		return solution;
+
 	}
 
 	public ArrayList<? extends Label> registerNodes(ShortestPathData data) {
