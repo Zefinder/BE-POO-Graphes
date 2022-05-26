@@ -22,6 +22,7 @@ public class ElectricCarAlgorithm extends ShortestPathAlgorithm {
 
 	public ElectricCarAlgorithm(ShortestPathData data) {
 		super(data);
+		priorityQueue = new BinaryHeap<>();
 		maxProf = 0;
 	}
 
@@ -63,6 +64,7 @@ public class ElectricCarAlgorithm extends ShortestPathAlgorithm {
 			
 			// Si on est supérieurs à 200, on se casse
 			if (currentNodeLabel.getDistanceEtape() > 200) {
+				System.out.println(currentNodeLabel.getDistanceEtape());
 				continue;
 			}
 
@@ -156,6 +158,7 @@ public class ElectricCarAlgorithm extends ShortestPathAlgorithm {
 
 		if (!current.equals(origin)) {
 			solution = new ShortestPathSolution(data, Status.INFEASIBLE);
+			System.out.println("Pas de solution !");
 		} else {
 
 			Collections.reverse(arcs);

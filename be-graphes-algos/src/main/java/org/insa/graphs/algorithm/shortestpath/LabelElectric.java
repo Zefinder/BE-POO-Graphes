@@ -97,7 +97,7 @@ public class LabelElectric implements Comparable<LabelElectric>, Cloneable {
 	}
 	
 	public void addDistanceEtape(double distance) {
-		this.distanceEtape += distance;
+		this.distanceEtape += distance/1000;
 	}
 	
 	@Override
